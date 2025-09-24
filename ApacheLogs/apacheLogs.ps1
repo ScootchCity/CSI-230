@@ -10,8 +10,12 @@ $regex = [regex] "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
 $ipsUnorganized = $regex.Matches($notfounds)
 
 #Get ip's as pscustomobject
-$ips = "IP"
+$ips = @()
 for($i=0; $i -lt $ipsUnorganized.Count; $i++){
-  $ips += [ipsUnorganized]@{ "IP" = $ipsUnorganized[$i].Value;}
+  $ips += [PSCustomObject]@{ "IP" = $ipsUnorganized[$i].Value;}
 }
-$ips | Where-Object { $_.IP -ilike "10.*" }
+
+#Count ips
+$ipsoftens = $ips | Where-Object { $_.IP -ilike "10.*" }
+$counts = $ipsoftens | Group-Object IP
+$counts | Select-Object Count, Name
